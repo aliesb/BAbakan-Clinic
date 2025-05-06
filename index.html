@@ -162,6 +162,54 @@
 <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-firestore-compat.js"></script>
 <script src="firebase-config.js"></script>
+
+        <!-- قبل از بسته شدن </body> این تغییرات را اعمال کنید -->
+<script>
+    // کدهای موجود شما (همان script فعلی)
+    const usernameInput = document.getElementById('username');
+    const loginForm = document.getElementById('login-form');
+    
+    // ... کدهای فعلی شما بدون تغییر باقی می‌مانند ...
+
+    // تابع validateUser را به این صورت اصلاح کنید:
+    async function validateUser(username, password) {
+        try {
+            // احراز هویت با Firebase
+            const userCredential = await firebase.auth().signInWithEmailAndPassword(username + "@babakanclinic.com", password);
+            return true;
+        } catch (error) {
+            console.error("خطا در ورود:", error);
+            return false;
+        }
+    }
+
+    // تابع attemptLogin را به async تبدیل کنید:
+    async function attemptLogin() {
+        const username = usernameInput.value;
+        const password = document.getElementById('password').value;
+        
+        if(await validateUser(username, password)) {
+            // نمایش پیام ورود موفق
+            loginForm.innerHTML = `
+                <div class="login-success">
+                    <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                        <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                    </svg>
+                    <p>ورود موفقیت‌آمیز بود</p>
+                </div>
+            `;
+            
+            // انتقال به صفحه داشبورد
+            setTimeout(() => {
+                window.location.href = 'dashboard.html';
+            }, 1000);
+        } else {
+            // کدهای نمایش خطا (بدون تغییر)
+        }
+    }
+</script>
+        
         
     </style>
 </head>
