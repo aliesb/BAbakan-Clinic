@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="fa">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>داشبورد مدیریت - کلینیک بابکان</title>
+    <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v30.1.0/dist/font-face.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4e73df;
+            --secondary: #1cc88a;
+            --danger: #e74a3b;
+            --warning: #f6c23e;
+            --info: #36b9cc;
+            --dark: #5a5c69;
+            --light: #f8f9fc;
+            --white: #ffffff;
+            --gray: #858796;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Vazir, sans-serif;
+        }
+        
+        body {
+            background-color: #f8f9fc;
+            color: var(--dark);
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        /* نوار کناری */
+        .sidebar {
+            width: 250px;
+            background: linear-gradient(180deg, var(--primary) 0%, #224abe 100%);
+            color: white;
+            padding: 1rem 0;
+            height: 100vh;
+            position: sticky;
+            top: 0;
+            box-shadow: 4px 0 15px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s;
+        }
+        
+        .sidebar-header {
+            padding: 1rem;
+            text-align: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 1rem;
+        }
+        
+        .clinic-logo {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid white;
+            margin-bottom: 1rem;
+        }
+        
+        .clinic-name {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        
+        .clinic-slogan {
+            font-size: 0.8rem;
+            opacity: 0.8;
+        }
+        
+        .sidebar-menu {
+            list-style: none;
+            padding: 0 1rem;
+        }
+        
+        .menu-item {
+            padding: 0.8rem 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            border-radius: 5px;
+            margin-bottom: 0.5rem;
+        }
+        
+        .menu-item:hover, .menu-item.active {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        .menu-item i {
+            margin-left: 0.5rem;
+            font-size: 1rem;
+            width: 20px;
+            text-align: center;
+        }
+        
+        .menu-item span {
+            font-size: 0.9rem;
+        }
+        
+        /* محتوای اصلی */
+        .main-content {
+            flex: 1;
+            padding: 1.5rem;
+        }
+        
+        /* هدر */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            background-color: var(--white);
+            padding: 1rem 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.1);
+        }
+        
+        .date-display {
+            font-size: 0.9rem;
+            color: var(--gray);
+        }
+        
+        .user-profile {
+            display: flex;
+            align-items: center;
+        }
+        
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-left: 0.5rem;
+            font-weight: bold;
+        }
+        
+        /* کارت‌های اطلاعاتی */
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .stat-card {
+            background-color: var(--white);
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.1);
+            border-left: 5px solid;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .stat-card.primary {
+            border-left-color: var(--primary);
+        }
+        
+        .stat-card.success {
+            border-left-color: var(--secondary);
+        }
+        
+        .stat-card.warning {
+            border-left-color: var(--warning);
+        }
+        
+        .stat-card.danger {
+            border-left-color: var(--danger);
+        }
+        
+        .stat-card .icon {
+            position: absolute;
+            top: 1rem;
+            left: 1rem;
+            font-size: 1.5rem;
+            opacity: 0.2;
+        }
+        
+        .card-title {
+            font-size: 0.8rem;
+            color: var(--gray);
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            font-weight: 700;
+        }
+        
+        .card-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        
+        .card-change {
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+        }
+        
+        .card-change.up {
+            color: var(--secondary);
+        }
+        
+        .card-change.down {
+            color: var(--danger);
+        }
+        
+        /* بخش بیماران امروز */
+        .patients-card {
+            background-color: var(--white);
+            border-radius: 10px;
+            box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.1);
+            margin-bottom: 1.5rem;
+            overflow: hidden;
+        }
+        
+        .card-header {
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid #e3e6f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .card-title {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--dark);
+        }
+        
+        .action-btn {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: all 0.3s;
+        }
+        
+        .action-btn:hover {
+            background-color: #2e59d9;
+        }
+        
+        .table-responsive {
+            overflow-x: auto;
+        }
+        
+        .patients-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .patients-table th {
+            text-align: right;
+            padding: 1rem;
+            background-color: #f8f9fc;
+            color: var(--gray);
+            font-weight: 700;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+        }
+        
+        .patients-table td {
+            padding: 1rem;
+            border-bottom: 1px solid #e3e6f0;
+            font-size: 0.9rem;
+        }
+        
+        .patient-info {
+            display: flex;
+            align-items: center;
+        }
+        
+        .patient-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #e9ecef;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-left: 0.5rem;
+            color: var(--primary);
+            font-weight: bold;
+        }
+        
+        .drug-indicator {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-left: 0.5rem;
+        }
+        
+        .opium {
+            background-color: var(--secondary);
+        }
+        
+        .methadone {
+            background-color: var(--danger);
+        }
+        
+        .buprenorphine {
+            background-color: var(--warning);
+        }
+        
+        .status-badge {
+            padding: 0.3rem 0.6rem;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 700;
+        }
+        
+        .badge-success {
+            background-color: rgba(28, 200, 138, 0.1);
+            color: var(--secondary);
+        }
+        
+        .badge-warning {
+            background-color: rgba(246, 194, 62, 0.1);
+            color: var(--warning);
+        }
+        
+        .badge-danger {
+            background-color: rgba(231, 74, 59, 0.1);
+            color: var(--danger);
+        }
+        
+        /* آمار زیر جدول */
+        .table-footer {
+            display: flex;
+            justify-content: space-between;
+            padding: 1rem 1.5rem;
+            background-color: #f8f9fc;
+            border-top: 1px solid #e3e6f0;
+        }
+        
+        .table-stats {
+            display: flex;
+            gap: 1.5rem;
+        }
+        
+        .stat-item {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .stat-label {
+            font-size: 0.8rem;
+            color: var(--gray);
+        }
+        
+        .stat-value {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--dark);
+        }
+        
+        /* رسپانسیو */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 80px;
+            }
+            
+            .sidebar-header, .menu-item span {
+                display: none;
+            }
+            
+            .menu-item {
+                justify-content: center;
+                padding: 1rem 0;
+            }
+            
+            .menu-item i {
+                margin-left: 0;
+                font-size: 1.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- نوار کناری -->
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <img src="clinic-logo.jpg" alt="کلینیک بابکان" class="clinic-logo">
+            <div class="clinic-name">کلینیک بابکان</div>
+            <div class="clinic-slogan">مرکز تخصصی ترک اعتیاد</div>
+        </div>
+        
+        <ul class="sidebar-menu">
+            <li class="menu-item active">
+                <i class="fas fa-tachometer-alt"></i>
+                <span>داشبورد</span>
+            </li>
+            <li class="menu-item">
+                <i class="fas fa-user-plus"></i>
+                <span>ثبت بیمار جدید</span>
+            </li>
+            <li class="menu-item">
+                <i class="fas fa-search"></i>
+                <span>جستجوی بیمار</span>
+            </li>
+            <li class="menu-item">
+                <i class="fas fa-users"></i>
+                <span>لیست بیماران</span>
+            </li>
+            <li class="menu-item">
+                <i class="fas fa-pills"></i>
+                <span>مدیریت داروها</span>
+            </li>
+            <li class="menu-item">
+                <i class="fas fa-chart-line"></i>
+                <span>گزارشات</span>
+            </li>
+            <li class="menu-item">
+                <i class="fas fa-cog"></i>
+                <span>تنظیمات</span>
+            </li>
+        </ul>
+    </div>
+    
+    <!-- محتوای اصلی -->
+    <div class="main-content">
+        <!-- هدر -->
+        <div class="header">
+            <div class="date-display">
+                <span id="current-date">سه‌شنبه، ۱۵ خرداد ۱۴۰۲</span>
+            </div>
+            <div class="user-profile">
+                <div class="user-info">
+                    <div class="user-name">مدیر سیستم</div>
+                    <div class="user-role">پزشک ارشد</div>
+                </div>
+                <div class="user-avatar">ب</div>
+            </div>
+        </div>
+        
+        <!-- کارت‌های آماری -->
+        <div class="stats-row">
+            <div class="stat-card primary">
+                <i class="fas fa-users icon"></i>
+                <div class="card-title">بیماران فعال</div>
+                <div class="card-value">۸۷</div>
+                <div class="card-change up">
+                    <i class="fas fa-arrow-up"></i>
+                    <span>۵ مورد نسبت به ماه گذشته</span>
+                </div>
+            </div>
+            
+            <div class="stat-card success">
+                <i class="fas fa-pills icon"></i>
+                <div class="card-title">تحویل امروز</div>
+                <div class="card-value">۲۴</div>
+                <div class="card-change up">
+                    <i class="fas fa-arrow-up"></i>
+                    <span>۳ مورد بیشتر از دیروز</span>
+                </div>
+            </div>
+            
+            <div class="stat-card warning">
+                <i class="fas fa-calendar-alt icon"></i>
+                <div class="card-title">نسخه‌های در حال اتمام</div>
+                <div class="card-value">۹</div>
+                <div class="card-change up">
+                    <i class="fas fa-arrow-up"></i>
+                    <span>۲ مورد جدید</span>
+                </div>
+            </div>
+            
+            <div class="stat-card danger">
+                <i class="fas fa-exclamation-triangle icon"></i>
+                <div class="card-title">داروی در حال اتمام</div>
+                <div class="card-value">متادون</div>
+                <div class="card-change down">
+                    <i class="fas fa-arrow-down"></i>
+                    <span>تنها ۲۳۰ سی‌سی باقی مانده</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- بیماران امروز -->
+        <div class="patients-card">
+            <div class="card-header">
+                <div class="card-title">بیماران امروز برای تحویل دارو</div>
+                <button class="action-btn">
+                    <i class="fas fa-print"></i> چاپ لیست
+                </button>
+            </div>
+            
+            <div class="table-responsive">
+                <table class="patients-table">
+                    <thead>
+                        <tr>
+                            <th>نام بیمار</th>
+                            <th>شماره پرونده</th>
+                            <th>نوع دارو</th>
+                            <th>دوز روزانه</th>
+                            <th>وضعیت</th>
+                            <th>عملیات</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <div class="patient-info">
+                                    <div class="patient-avatar">م</div>
+                                    <div>محمد رضایی</div>
+                                    <span class="drug-indicator methadone"></span>
+                                </div>
+                            </td>
+                            <td>1402-45</td>
+                            <td>متادون</td>
+                            <td>۱۵ سی‌سی</td>
+                            <td><span class="status-badge badge-success">فعال</span></td>
+                            <td>
+                                <button class="action-btn">
+                                    <i class="fas fa-pills"></i> تحویل دارو
+                                </button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="patient-info">
+                                    <div class="patient-avatar">ف</div>
+                                    <div>فاطمه محمدی</div>
+                                    <span class="drug-indicator opium"></span>
+                                </div>
+                            </td>
+                            <td>1402-67</td>
+                            <td>اپیوم</td>
+                            <td>۱۲ سی‌سی</td>
+                            <td><span class="status-badge badge-success">فعال</span></td>
+                            <td>
+                                <button class="action-btn">
+                                    <i class="fas fa-pills"></i> تحویل دارو
+                                </button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="patient-info">
+                                    <div class="patient-avatar">ع</div>
+                                    <div>علی احمدی</div>
+                                    <span class="drug-indicator buprenorphine"></span>
+                                </div>
+                            </td>
+                            <td>1402-89</td>
+                            <td>بوپرونورفین</td>
+                            <td>۸ سی‌سی</td>
+                            <td><span class="status-badge badge-warning">در حال اتمام</span></td>
+                            <td>
+                                <button class="action-btn">
+                                    <i class="fas fa-redo"></i> تمدید نسخه
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="table-footer">
+                <div class="table-stats">
+                    <div class="stat-item">
+                        <span class="stat-label">تعداد بیماران امروز</span>
+                        <span class="stat-value">۳ نفر</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">مجموع دوز تحویلی</span>
+                        <span class="stat-value">۳۵ سی‌سی</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">داروی پرتحویل</span>
+                        <span class="stat-value">متادون</span>
+                    </div>
+                </div>
+                
+                <button class="action-btn">
+                    <i class="fas fa-eye"></i> مشاهده همه
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // نمایش تاریخ امروز
+        const today = new Date();
+        const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+        document.getElementById('current-date').textContent = today.toLocaleDateString('fa-IR', options);
+        
+        // مدیریت کلیک روی منوها
+        document.querySelectorAll('.menu-item').forEach(item => {
+            item.addEventListener('click', function() {
+                document.querySelector('.menu-item.active').classList.remove('active');
+                this.classList.add('active');
+                
+                // در اینجا می‌توانید صفحه مربوطه را نمایش دهید
+                const menuText = this.querySelector('span').textContent;
+                alert(`رفتن به صفحه ${menuText}`);
+            });
+        });
+        
+        // مدیریت تحویل دارو
+        document.querySelectorAll('.action-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                if(this.innerHTML.includes('تحویل دارو')) {
+                    const patientName = this.closest('tr').querySelector('.patient-info div:nth-child(2)').textContent;
+                    alert(`تحویل دارو برای بیمار ${patientName} با موفقیت ثبت شد`);
+                }
+            });
+        });
+    </script>
+</body>
+</html>
