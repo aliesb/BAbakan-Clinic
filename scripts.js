@@ -1,5 +1,47 @@
 // scripts.js
 
+  // تابع ذخیره بیمار در Firebase
+async function savePatient(patientData) {
+    try {
+        // اضافه کردن تاریخ‌های تحویل دارو
+        patientData.deliveryDates = calculateDeliveryDates(
+            patientData.registrationDate, 
+            patientData.duration
+        );
+        
+        // ذخیره در Firebase
+        const docRef = await db.collection('patients').add({
+            ...patientData,
+            createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
+        
+        // ذخیره در localStorage برای دسترسی سریع
+        const patients = JSON.parse(localStorage.getItem('clinicPatients')) || [];
+        patients.push({ id: docRef.id, ...patientData });
+        localStorage.setItem('clinicPatients', JSON.stringify(patients));
+        
+        return true;
+    } catch (error) {
+        console.error("Error saving patient:", error);
+        throw error;
+    }
+}
+
+// تابع محاسبه تاریخ‌های تحویل دارو
+function calculateDeliveryDates(startDate, duration, interval = 14) {
+    const dates = [];
+    const start = new Date(startDate.replace(/(\d+)\/(\d+)\/(\d+)/, '$2/$1/$3'));
+    
+    for (let i = 0; i < duration; i += interval) {
+        const nextDate = new Date(start);
+        nextDate.setDate(start.getDate() + i);
+        dates.push(nextDate.toLocaleDateString('fa-IR'));
+    }
+    
+    return dates;
+}
+
+
 // مدیریت لاگین
 const validateUser = (username, password) => {
   const validUsers = [
@@ -70,44 +112,5 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('username').focus();
   }
 
-  // تابع ذخیره بیمار در Firebase
-async function savePatient(patientData) {
-    try {
-        // اضافه کردن تاریخ‌های تحویل دارو
-        patientData.deliveryDates = calculateDeliveryDates(
-            patientData.registrationDate, 
-            patientData.duration
-        );
-        
-        // ذخیره در Firebase
-        const docRef = await db.collection('patients').add({
-            ...patientData,
-            createdAt: firebase.firestore.FieldValue.serverTimestamp()
-        });
-        
-        // ذخیره در localStorage برای دسترسی سریع
-        const patients = JSON.parse(localStorage.getItem('clinicPatients')) || [];
-        patients.push({ id: docRef.id, ...patientData });
-        localStorage.setItem('clinicPatients', JSON.stringify(patients));
-        
-        return true;
-    } catch (error) {
-        console.error("Error saving patient:", error);
-        throw error;
-    }
-}
 
-// تابع محاسبه تاریخ‌های تحویل دارو
-function calculateDeliveryDates(startDate, duration, interval = 14) {
-    const dates = [];
-    const start = new Date(startDate.replace(/(\d+)\/(\d+)\/(\d+)/, '$2/$1/$3'));
-    
-    for (let i = 0; i < duration; i += interval) {
-        const nextDate = new Date(start);
-        nextDate.setDate(start.getDate() + i);
-        dates.push(nextDate.toLocaleDateString('fa-IR'));
-    }
-    
-    return dates;
-}
 });
