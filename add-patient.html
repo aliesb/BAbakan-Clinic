@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="fa">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ثبت بیمار جدید - کلینیک بابکان</title>
+    <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v30.1.0/dist/font-face.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* استایل‌های اختصاصی صفحه ثبت بیمار */
+        .patient-form-container {
+            background-color: var(--white);
+            border-radius: 12px;
+            box-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, 0.05);
+            padding: 2rem;
+            margin-top: 1.5rem;
+        }
+        
+        .form-title {
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .drug-selection {
+            display: flex;
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+        
+        .drug-option {
+            flex: 1;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+        }
+        
+        .drug-option:hover {
+            border-color: var(--primary-light);
+        }
+        
+        .drug-option.selected {
+            border-color: var(--primary);
+            background-color: rgba(78, 115, 223, 0.05);
+        }
+        
+        .drug-icon {
+            font-size: 1.75rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .opium { color: var(--secondary); }
+        .methadone { color: var(--danger); }
+        .buprenorphine { color: var(--warning); }
+        
+        textarea {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-family: Vazir, sans-serif;
+            resize: vertical;
+            min-height: 100px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- منوی کناری یکسان با صفحه داشبورد -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <img src="assets/images/clinic-logo.jpg" alt="کلینیک بابکان" class="clinic-logo">
+                <div class="clinic-name">کلینیک بابکان</div>
+                <div class="clinic-slogan">مرکز تخصصی ترک اعتیاد</div>
+            </div>
+            
+            <ul class="sidebar-menu">
+                <li class="menu-item">
+                    <i class="fas fa-tachometer-alt"></i>
+                    <span>داشبورد</span>
+                </li>
+                <li class="menu-item active">
+                    <i class="fas fa-user-plus"></i>
+                    <span>ثبت بیمار جدید</span>
+                </li>
+                <li class="menu-item">
+                    <i class="fas fa-users"></i>
+                    <span>لیست بیماران</span>
+                </li>
+                <li class="menu-item">
+                    <i class="fas fa-pills"></i>
+                    <span>مدیریت داروها</span>
+                </li>
+            </ul>
+        </div>
+        
+        <!-- محتوای اصلی -->
+        <div class="main-content">
+            <!-- هدر یکسان با صفحه داشبورد -->
+            <div class="header">
+                <div class="header-title">ثبت بیمار جدید</div>
+                <div class="user-profile">
+                    <div class="user-info">
+                        <div class="user-name">دکتر احمدی</div>
+                        <div class="user-role">پزشک ارشد</div>
+                    </div>
+                    <div class="user-avatar">د</div>
+                </div>
+            </div>
+            
+            <!-- بخش اصلی فرم -->
+            <div class="profile-content">
+                <div class="patient-form-container">
+                    <h1 class="form-title">
+                        <i class="fas fa-user-plus"></i>
+                        فرم ثبت بیمار جدید
+                    </h1>
+                    
+                    <form id="new-patient-form">
+                        <div class="form-grid">
+                            <div class="input-group">
+                                <label for="full-name">نام کامل بیمار</label>
+                                <input type="text" id="full-name" required>
+                            </div>
+                            
+                            <div class="input-group">
+                                <label for="national-id">کد ملی</label>
+                                <input type="text" id="national-id" required>
+                            </div>
+                            
+                            <div class="input-group">
+                                <label for="phone">شماره تماس</label>
+                                <input type="tel" id="phone" required>
+                            </div>
+                            
+                            <div class="input-group">
+                                <label for="file-number">شماره پرونده</label>
+                                <input type="text" id="file-number" required>
+                            </div>
+                        </div>
+                        
+                        <h3 class="section-title">نوع داروی تجویزی</h3>
+                        <div class="drug-selection">
+                            <div class="drug-option" data-drug="opium">
+                                <div class="drug-icon opium">
+                                    <i class="fas fa-capsules"></i>
+                                </div>
+                                <h4>اپیوم</h4>
+                                <p class="text-muted">داروی سنتی ترک اعتیاد</p>
+                            </div>
+                            
+                            <div class="drug-option" data-drug="methadone">
+                                <div class="drug-icon methadone">
+                                    <i class="fas fa-pills"></i>
+                                </div>
+                                <h4>متادون</h4>
+                                <p class="text-muted">داروی رایج ترک اعتیاد</p>
+                            </div>
+                            
+                            <div class="drug-option" data-drug="buprenorphine">
+                                <div class="drug-icon buprenorphine">
+                                    <i class="fas fa-tablets"></i>
+                                </div>
+                                <h4>بوپرونورفین</h4>
+                                <p class="text-muted">داروی جدیدتر با عوارض کمتر</p>
+                            </div>
+                        </div>
+                        
+                        <div class="form-grid">
+                            <div class="input-group">
+                                <label for="daily-dose">دوز روزانه (سی‌سی)</label>
+                                <input type="number" id="daily-dose" min="1" max="50" required>
+                            </div>
+                            
+                            <div class="input-group">
+                                <label for="treatment-duration">مدت درمان (روز)</label>
+                                <input type="number" id="treatment-duration" min="7" max="365" value="90" required>
+                            </div>
+                        </div>
+                        
+                        <div class="input-group">
+                            <label for="notes">توضیحات اضافه</label>
+                            <textarea id="notes" rows="3"></textarea>
+                        </div>
+                        
+                        <div class="action-buttons">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save"></i> ثبت بیمار
+                            </button>
+                            <button type="reset" class="btn btn-outline">
+                                <i class="fas fa-eraser"></i> پاک کردن فرم
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- اسکریپت‌ها -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-firestore-compat.js"></script>
+    <script src="firebase-config.js"></script>
+    <script src="scripts.js"></script>
+    
+    <script>
+        // انتخاب نوع دارو
+        document.querySelectorAll('.drug-option').forEach(option => {
+            option.addEventListener('click', function() {
+                document.querySelectorAll('.drug-option').forEach(opt => {
+                    opt.classList.remove('selected');
+                });
+                this.classList.add('selected');
+            });
+        });
+
+        // مدیریت ارسال فرم
+        document.getElementById('new-patient-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const selectedDrug = document.querySelector('.drug-option.selected')?.dataset.drug;
+            if (!selectedDrug) {
+                showAlert('لطفا نوع دارو را انتخاب کنید', 'error');
+                return;
+            }
+
+            const patientData = {
+                name: document.getElementById('full-name').value,
+                nationalId: document.getElementById('national-id').value,
+                phone: document.getElementById('phone').value,
+                fileNumber: document.getElementById('file-number').value,
+                drugType: selectedDrug,
+                dailyDose: document.getElementById('daily-dose').value,
+                duration: document.getElementById('treatment-duration').value,
+                notes: document.getElementById('notes').value,
+                registrationDate: new Date().toLocaleDateString('fa-IR'),
+                nextVisitDate: calculateNextVisitDate(14),
+                status: 'active'
+            };
+
+            try {
+                // نمایش اسپینر
+                const submitBtn = e.target.querySelector('button[type="submit"]');
+                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> در حال ثبت...';
+                submitBtn.disabled = true;
+                
+                // ذخیره در Firebase
+                await savePatient(patientData);
+                
+                showAlert('بیمار با موفقیت ثبت شد', 'success');
+                setTimeout(() => {
+                    window.location.href = 'dashboard.html';
+                }, 1500);
+            } catch (error) {
+                console.error('خطا در ثبت بیمار:', error);
+                showAlert('خطا در ثبت اطلاعات بیمار', 'error');
+                submitBtn.innerHTML = '<i class="fas fa-save"></i> ثبت بیمار';
+                submitBtn.disabled = false;
+            }
+        });
+
+        function calculateNextVisitDate(days = 14) {
+            const today = new Date();
+            today.setDate(today.getDate() + days);
+            return today.toLocaleDateString('fa-IR');
+        }
+
+        function showAlert(message, type) {
+            const alertDiv = document.createElement('div');
+            alertDiv.className = `alert alert-${type}`;
+            alertDiv.innerHTML = `
+                <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i>
+                ${message}
+            `;
+            
+            const form = document.getElementById('new-patient-form');
+            form.prepend(alertDiv);
+            
+            setTimeout(() => {
+                alertDiv.remove();
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
