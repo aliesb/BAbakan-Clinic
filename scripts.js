@@ -57,12 +57,17 @@ const findMostDeliveredDrug = (patientsArray) => {
 };
 
 const toJalali = (dateString) => {
-    const parts = dateString.split('/');
-    const year = parseInt(parts[0]);
-    const month = parseInt(parts[1]) - 1; // ماه در جاوااسکریپت از 0 شروع میشه
-    const day = parseInt(parts[2]);
-    const gregorianDate = new Date(year, month, day);
-    return new Intl.DateTimeFormat('fa-IR').format(gregorianDate);
+    try {
+        const parts = dateString.split('/');
+        const year = parseInt(parts[0]);
+        const month = parseInt(parts[1]) - 1; // ماه در جاوااسکریپت از 0 شروع میشه
+        const day = parseInt(parts[2]);
+        const gregorianDate = new Date(year, month, day);
+        return new Intl.DateTimeFormat('fa-IR').format(gregorianDate);
+    } catch (error) {
+        console.error("Error converting date:", error);
+        return "تاریخ نامعتبر"; // یا هر مقدار پیش‌فرض دیگری
+    }
 };
 
 const renderTodayPatients = () => {
@@ -94,9 +99,16 @@ const renderTodayPatients = () => {
     });
 
     // بروزرسانی آمار زیر جدول
-    document.querySelector('.stat-value').textContent = todayPatients.length + " نفر";
-    document.querySelectorAll('.stat-value')[1].textContent = calculateTotalDose(todayPatients) + " سی‌سی";
-    document.querySelectorAll('.stat-value')[2].textContent = findMostDeliveredDrug(todayPatients);
+    if (document.querySelector('.stat-value')) {
+        document.querySelector('.stat-value').textContent = todayPatients.length + " نفر";
+    }
+    if (document.querySelectorAll('.stat-value')[1]) {
+        document.querySelectorAll('.stat-value')[1].textContent = calculateTotalDose(todayPatients) + " سی‌سی";
+    }
+    if (document.querySelectorAll('.stat-value')[2]) {
+        document.querySelectorAll('.stat-value')[2].textContent = findMostDeliveredDrug(todayPatients);
+    }
+
 };
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -104,8 +116,13 @@ document.addEventListener('DOMContentLoaded', () => {
     if (document.querySelector('#dashboard')) {
         renderTodayPatients();
         // بروزرسانی کارت‌های آمار
-        document.querySelectorAll('.card-value')[0].textContent = countActivePatients();
-        document.querySelectorAll('.card-value')[1].textContent = getTodayPatients().length;
+        if (document.querySelectorAll('.card-value')[0]) {
+            document.querySelectorAll('.card-value')[0].textContent = countActivePatients();
+        }
+        if (document.querySelectorAll('.card-value')[1]) {
+            document.querySelectorAll('.card-value')[1].textContent = getTodayPatients().length;
+        }
+
     }
 
     // اگر در صفحه لاگین هستیم
