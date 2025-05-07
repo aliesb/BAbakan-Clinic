@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html dir="rtl" lang="fa">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -88,7 +89,8 @@
             margin-bottom: 0.5rem;
         }
 
-        .menu-item:hover, .menu-item.active {
+        .menu-item:hover,
+        .menu-item.active {
             background-color: rgba(255, 255, 255, 0.1);
         }
 
@@ -373,7 +375,8 @@
                 width: 80px;
             }
 
-            .sidebar-header, .menu-item span {
+            .sidebar-header,
+            .menu-item span {
                 display: none;
             }
 
@@ -384,3 +387,110 @@
 
             .menu-item i {
                 margin-left: 0;
+                font-size: 1.2rem;
+            }
+        }
+    </style>
+</head>
+
+<body id="dashboard">
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <img src="clinic-logo.jpg" alt="کلینیک بابکان" class="clinic-logo">
+            <div class="clinic-name">کلینیک بابکان</div>
+            <div class="clinic-slogan">مرکز تخصصی ترک اعتیاد</div>
+        </div>
+
+        <ul class="sidebar-menu">
+            <li class="menu-item active">
+                <i class="fas fa-tachometer-alt"></i>
+                <span>داشبورد</span>
+            </li>
+            <li class="menu-item">
+                <i class="fas fa-user-plus"></i>
+                <a href="add-patient.html"><span>ثبت بیمار جدید</span></a>
+            </li>
+            <li class="menu-item">
+                <i class="fas fa-search"></i>
+                <a href="#"><span>جستجوی بیمار</span></a>
+            </li>
+            <li class="menu-item">
+                <i class="fas fa-users"></i>
+                <a href="patient.html"><span>لیست بیماران</span></a>
+            </li>
+            <li class="menu-item">
+                <i class="fas fa-pills"></i>
+                <a href="#"><span>مدیریت داروها</span></a>
+            </li>
+            <li class="menu-item">
+                <i class="fas fa-chart-line"></i>
+                <a href="#"><span>گزارشات</span></a>
+            </li>
+            <li class="menu-item">
+                <i class="fas fa-cog"></i>
+                <a href="#"><span>تنظیمات</span></a>
+            </li>
+        </ul>
+    </div>
+
+    <div class="main-content">
+        <div class="header">
+            <div class="date-display">
+                <span id="current-date">سه‌شنبه، ۱۵ خرداد ۱۴۰۲</span>
+            </div>
+            <div class="user-profile">
+                <div class="user-info">
+                    <div class="user-name">مدیر سیستم</div>
+                    <div class="user-role">پزشک ارشد</div>
+                </div>
+                <div class="user-avatar">ب</div>
+            </div>
+        </div>
+
+        <div class="stats-row">
+            <div class="stat-card primary">
+                <i class="fas fa-users icon"></i>
+                <div class="card-title">بیماران فعال</div>
+                <div class="card-value" id="active-patients-count">۸۷</div>
+                <div class="card-change up">
+                    <i class="fas fa-arrow-up"></i>
+                    <span>۵ مورد نسبت به ماه گذشته</span>
+                </div>
+            </div>
+
+            <div class="stat-card success">
+                <i class="fas fa-pills icon"></i>
+                <div class="card-title">تحویل امروز</div>
+                <div class="card-value" id="today-deliveries-count">۲۴</div>
+                <div class="card-change up">
+                    <i class="fas fa-arrow-up"></i>
+                    <span>۳ مورد بیشتر از دیروز</span>
+                </div>
+            </div>
+
+            <div class="stat-card warning">
+                <i class="fas fa-calendar-alt icon"></i>
+                <div class="card-title">نسخه‌های در حال اتمام</div>
+                <div class="card-value" id="expiring-prescriptions-count">۹</div>
+                <div class="card-change up">
+                    <i class="fas fa-arrow-up"></i>
+                    <span>۲ مورد جدید</span>
+                </div>
+            </div>
+
+            <div class="stat-card danger">
+                <i class="fas fa-exclamation-triangle icon"></i>
+                <div class="card-title">داروی در حال اتمام</div>
+                <div class="card-value" id="expiring-drug-name">متادون</div>
+                <div class="card-change down">
+                    <i class="fas fa-arrow-down"></i>
+                    <span>تنها ۲۳۰ سی‌سی باقی مانده</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="patients-card">
+            <div class="card-header">
+                <div class="card-title">بیماران امروز برای تحویل دارو</div>
+                <button class="action-btn">
+                    <i class
